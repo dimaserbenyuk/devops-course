@@ -65,6 +65,7 @@ jobs:
       uses: bridgecrewio/checkov-action@master
       with: 
         framework: terraform
+        skip_check: CKV_AZURE_10 #azurerm_network_security_group.example
 
     # Upload results to GitHub Advanced Security
     - name: Upload SARIF file

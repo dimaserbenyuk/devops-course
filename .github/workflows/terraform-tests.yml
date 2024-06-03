@@ -6,6 +6,7 @@ on:
       - '**.tf'
       - '!**.md'
 
+
 permissions:
   security-events: write # Needed to upload-sarif
   contents: read # Needed to clone repo

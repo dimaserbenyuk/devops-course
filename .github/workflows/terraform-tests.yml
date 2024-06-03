@@ -3,7 +3,7 @@ name: 'Terraform Tests'
 on:
   pull_request:
     paths:
-      - '/**Networking**.tf'
+      - '**.tf'
       - '!**.md'
 
 permissions:

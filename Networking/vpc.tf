@@ -1,7 +1,4 @@
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
-  location = "Poland Central"
-}
+
 
 resource "azurerm_virtual_network" "example" {
   name                = "example-network"

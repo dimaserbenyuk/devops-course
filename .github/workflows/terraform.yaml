@@ -1,0 +1,37 @@
+name: az-oidc-test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  issues: write
+  statuses: write
+
+
+# subject on oidc : pullrequest or environment:
+# if environment specified on job (pull request) does not work
+jobs:
+  plan-rg:
+    runs-on: ubuntu-latest
+    name: plan rg
+    environment:
+      name: dev
+    env:
+      ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+      ARM_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+      LAYER_NAME: resource-group
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: debug
+        run: |
+          echo "$GITHUB_CONTEXT"
+          env
+          echo ${ACTIONS_ID_TOKEN_REQUEST_URL}
+          echo ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}

@@ -85,3 +85,21 @@ resource "azuread_application_federated_identity_credential" "pr" {
   issuer         = "https://token.actions.githubusercontent.com"
   subject        = "repo:dimaserbenyuk/devops-course:pull_request"
 }
+
+resource "azuread_application_federated_identity_credential" "env-prod" {
+  application_id = azuread_application.this.id
+  display_name   = "az-oidc-env-prod"
+  description    = "deployments for repository cloud-cicd-exploration"
+  audiences      = ["api://AzureADTokenExchange"]
+  issuer         = "https://token.actions.githubusercontent.com"
+  subject        = "repo:dimaserbenyuk/devops-course::environment:prod"
+}
+
+resource "azuread_application_federated_identity_credential" "env-dev" {
+  application_id = azuread_application.this.id
+  display_name   = "az-oidc-env-dev"
+  description    = "deployments for repository cloud-cicd-exploration"
+  audiences      = ["api://AzureADTokenExchange"]
+  issuer         = "https://token.actions.githubusercontent.com"
+  subject        = "repo:dimaserbenyuk/devops-course::environment:dev"
+}

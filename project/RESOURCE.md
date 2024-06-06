@@ -10,8 +10,8 @@
 
 | Name | Version |
 |------|---------|
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | n/a |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.106.1 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | ~> 4.0 |
 
 ## Modules
 
@@ -21,21 +21,17 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_key_vault.vault](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/key_vault) | resource |
-| [azurerm_key_vault_secret.ssh_private_key](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/key_vault_secret) | resource |
-| [azurerm_key_vault_secret.ssh_public_key](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/key_vault_secret) | resource |
-| [azurerm_linux_virtual_machine.serbeniuk](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/linux_virtual_machine) | resource |
-| [azurerm_nat_gateway.nat_gateway](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/nat_gateway) | resource |
-| [azurerm_network_interface.private](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/network_interface) | resource |
-| [azurerm_network_interface_security_group_association.my-nsg-assoc](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/network_interface_security_group_association) | resource |
-| [azurerm_network_security_group.private](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/network_security_group) | resource |
-| [azurerm_public_ip.nat_gateway_ip](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/public_ip) | resource |
+| [azuread_application.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application) | resource |
+| [azuread_application_federated_identity_credential.main](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_federated_identity_credential) | resource |
+| [azuread_application_federated_identity_credential.pr](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_federated_identity_credential) | resource |
+| [azuread_application_password.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application_password) | resource |
+| [azuread_service_principal.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal) | resource |
 | [azurerm_resource_group.rg](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/resource_group) | resource |
-| [azurerm_subnet_nat_gateway_association.subnet1_nat_gateway_assoc](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/subnet_nat_gateway_association) | resource |
-| [azurerm_subnet_nat_gateway_association.subnet2_nat_gateway_assoc](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/subnet_nat_gateway_association) | resource |
-| [azurerm_virtual_network.vpc](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/virtual_network) | resource |
-| [tls_private_key.vm_ssh_key](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
-| [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/data-sources/client_config) | data source |
+| [azurerm_role_assignment.sub-contributor](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/role_assignment) | resource |
+| [azuread_application_published_app_ids.well_known](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/application_published_app_ids) | data source |
+| [azuread_client_config.current](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/client_config) | data source |
+| [azuread_user.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/user) | data source |
+| [azurerm_subscription.this](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/data-sources/subscription) | data source |
 
 ## Inputs
 
@@ -48,5 +44,9 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_tls_private_key"></a> [tls\_private\_key](#output\_tls\_private\_key) | n/a |
+| <a name="output_credential_id"></a> [credential\_id](#output\_credential\_id) | n/a |
+| <a name="output_sp_application_name"></a> [sp\_application\_name](#output\_sp\_application\_name) | The name of the application |
+| <a name="output_sp_client_id"></a> [sp\_client\_id](#output\_sp\_client\_id) | The service principal application id |
+| <a name="output_sp_object_id"></a> [sp\_object\_id](#output\_sp\_object\_id) | Object ID for the service principal |
+| <a name="output_sp_password"></a> [sp\_password](#output\_sp\_password) | The service principal password |
 <!-- END_TF_DOCS -->

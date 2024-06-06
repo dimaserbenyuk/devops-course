@@ -13,6 +13,7 @@ terraform {
 
 
 provider "azurerm" {
+  use_oidc = true
   features {
     key_vault {
       recover_soft_deleted_key_vaults = true

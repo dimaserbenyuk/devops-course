@@ -38,7 +38,6 @@ resource "azuread_application" "this" {
   }
 }
 
-
 resource "azuread_service_principal" "this" {
   client_id                    = azuread_application.this.client_id
   app_role_assignment_required = false

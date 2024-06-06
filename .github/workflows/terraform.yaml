@@ -26,6 +26,7 @@ jobs:
       ARM_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
       ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
       ARM_SKIP_PROVIDER_REGISTRATION: true
+      CONFIG_DIRECTORY: project
     outputs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
     steps:
@@ -46,4 +47,6 @@ jobs:
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform init
+        with:
+          directory: ${{ env.CONFIG_DIRECTORY }}
 

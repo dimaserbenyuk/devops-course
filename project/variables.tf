@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   type    = string
-  default = "serbeniuk"
+  default = "serhii"
 }
 
 variable "resource_group_location" {

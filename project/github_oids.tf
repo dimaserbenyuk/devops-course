@@ -92,7 +92,7 @@ resource "azuread_application_federated_identity_credential" "env-prod" {
   description    = "deployments for repository cloud-cicd-exploration"
   audiences      = ["api://AzureADTokenExchange"]
   issuer         = "https://token.actions.githubusercontent.com"
-  subject        = "repo:dimaserbenyuk/devops-course::environment:prod"
+  subject        = "repo:dimaserbenyuk/devops-course:environment:prod"
 }
 
 resource "azuread_application_federated_identity_credential" "env-dev" {
@@ -101,5 +101,5 @@ resource "azuread_application_federated_identity_credential" "env-dev" {
   description    = "deployments for repository cloud-cicd-exploration"
   audiences      = ["api://AzureADTokenExchange"]
   issuer         = "https://token.actions.githubusercontent.com"
-  subject        = "repo:dimaserbenyuk/devops-course::environment:dev"
+  subject        = "repo:dimaserbenyuk/devops-course:environment:dev"
 }

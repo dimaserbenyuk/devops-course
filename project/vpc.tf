@@ -3,7 +3,7 @@ resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
 }
 
-#Define the virtual network
+# Define the virtual network
 resource "azurerm_virtual_network" "vpc" {
   name                = "my-network"
   location            = azurerm_resource_group.rg.location

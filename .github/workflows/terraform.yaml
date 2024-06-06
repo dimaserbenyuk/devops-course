@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'project/**.tf'
+      - '!**.md'
 
 permissions:
   id-token: write
@@ -11,14 +14,64 @@ permissions:
   pull-requests: write
   issues: write
   statuses: write
+  security-events: write
+  actions: read 
 
 
 # subject on oidc : pullrequest or environment:
 # if environment specified on job (pull request) does not work
 jobs:
+  directories:
+    name: "Directory-changes"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: theappnest/terraform-monorepo-action@master
+        id: directories
+        # with:
+        #   ignore: |
+        #     aws/**/policies
+        #     aws/**/templates
+        #     aws/**/scripts
+      - run: echo ${{ steps.directories.outputs.modules }}
+    outputs:
+      dirs: ${{ steps.directories.outputs.modules }}
+  terraform-tests:
+    name: 'Terraform Tests'
+    runs-on: ubuntu-latest
+    needs: directories
+    strategy:
+      matrix:
+        directories: ${{ fromJson(needs.directories.outputs.dirs) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.directories }}
+    
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init -backend=false
+
+    # Validate terraform files
+    - name: Terraform Validate
+      run: terraform validate
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    - name: Terraform Format
+      run: terraform fmt -check -recursive
+
+
   plan-rg:
     runs-on: ubuntu-latest
     name: plan rg
+    needs: [terraform-tests]
     defaults:
       run:
         working-directory: ./project

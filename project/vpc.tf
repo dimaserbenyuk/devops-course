@@ -12,13 +12,13 @@ resource "azurerm_virtual_network" "vpc" {
   dns_servers         = ["10.0.0.4", "10.0.0.5"]
 
   subnet {
-    name           = "subnet1"
-    address_prefix = "10.0.1.0/24"
+    name           = "subnet01"
+    address_prefix = "10.10.1.0/24"
     security_group = azurerm_network_security_group.private.id
   }
 
   subnet {
-    name           = "subnet2"
+    name           = "subnet02"
     address_prefix = "10.0.2.0/24"
     security_group = azurerm_network_security_group.private.id
   }

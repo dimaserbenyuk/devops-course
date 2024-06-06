@@ -85,7 +85,7 @@ resource "azurerm_network_interface" "private" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_virtual_network.virt.subnet.*.id[0]
+    subnet_id                     = azurerm_virtual_network.virtnet.subnet.*.id[0]
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.nat_gateway_ip.id
   }
@@ -107,7 +107,6 @@ resource "azurerm_nat_gateway" "nat_gateway" {
   resource_group_name = azurerm_resource_group.resgroup.name
   sku_name            = "Standard"
 }
-
 
 # Associate the NAT Gateway with the subnets
 resource "azurerm_subnet_nat_gateway_association" "subnet1_nat_gateway_assoc" {

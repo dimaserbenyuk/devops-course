@@ -1,5 +1,7 @@
 # devops-course
 
+[![az-oidc-test](https://github.com/dimaserbenyuk/devops-course/actions/workflows/terraform.yaml/badge.svg?branch=main)](https://github.com/dimaserbenyuk/devops-course/actions/workflows/terraform.yaml)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dimaserbenyuk/devops-course/blob/master/LICENSE.md)
+
 # Azure login cli
 
 ```bash

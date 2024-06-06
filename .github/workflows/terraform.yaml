@@ -15,7 +15,8 @@ permissions:
   issues: write
   statuses: write
   security-events: write
-  actions: read 
+  actions: read
+  attestations: write
 
 
 # subject on oidc : pullrequest or environment:

@@ -35,3 +35,17 @@ jobs:
           env
           echo ${ACTIONS_ID_TOKEN_REQUEST_URL}
           echo ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.SP_CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+
+      - name: Log in to Azure using OIDC
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az account show

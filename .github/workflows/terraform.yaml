@@ -173,3 +173,8 @@ jobs:
                   repo: context.repo.repo,
                   body: body
               })
+
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'project/tfplan' 

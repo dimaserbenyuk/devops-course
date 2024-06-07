@@ -233,7 +233,7 @@ jobs:
     - name: Terraform Apply
       id: tf-apply
       run: |
-        terraform -chdir=project apply tfplan | tee tfapply.log
+        terraform apply tfplan | tee tfapply.log
 
 # Create string output of Terraform Apply
     - name: Create String Output

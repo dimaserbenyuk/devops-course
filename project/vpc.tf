@@ -6,6 +6,8 @@ resource "azurerm_resource_group" "rg" {
 
 
 
+
+
 # # Define the virtual network
 # resource "azurerm_virtual_network" "vpc" {
 #   name                = "my-network"

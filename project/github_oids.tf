@@ -21,6 +21,7 @@ resource "azuread_application" "this" {
   owners = [data.azuread_client_config.current.object_id, data.azuread_user.this.object_id]
 
 
+
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result.MicrosoftGraph
 

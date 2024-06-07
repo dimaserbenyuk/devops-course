@@ -1,4 +1,4 @@
-resource "resource_group" "WP" {
+resource "azurerm_resource_group" "WP" {
   name     = "DKmytro"
   location = "East US"
 }

@@ -222,6 +222,13 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
+    - name: t
+      run: |
+        ls -la
+
+    - name: t
+      run: |
+        pwd
     # Terraform Apply
     - name: Terraform Apply
       id: tf-apply

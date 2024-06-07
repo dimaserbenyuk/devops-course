@@ -226,7 +226,8 @@ jobs:
     - name: Terraform Apply
       id: tf-apply
       run: |
-        terraform apply -auto-approve project/tfplan | tee tfapply.log
+        cd project
+        terraform apply -auto-approve tfplan | tee tfapply.log
 
 # Create string output of Terraform Apply
     - name: Create String Output

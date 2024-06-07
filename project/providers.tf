@@ -14,10 +14,10 @@ terraform {
     }
   }
   backend "azurerm" {
-      resource_group_name  = "serbeniuk"
-      storage_account_name = "tfstate35bb1ea7"
-      container_name       = "tfstate"
-      key                  = "terraform.tfstate"
+    resource_group_name  = "serbeniuk"
+    storage_account_name = "tfstate35bb1ea7"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
   }
 }
 

@@ -2,7 +2,7 @@
 
 [![az-oidc-test](https://github.com/dimaserbenyuk/devops-course/actions/workflows/terraform.yaml/badge.svg?branch=main)](https://github.com/dimaserbenyuk/devops-course/actions/workflows/terraform.yaml)  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dimaserbenyuk/devops-course/blob/master/LICENSE.md)
 
-![image](/aks-terraform-oidc.svg)
+![image](/images/aks-terraform-oidc.svg)
 
 
 # Azure login cli

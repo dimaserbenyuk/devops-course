@@ -8,18 +8,23 @@ terraform {
       source  = "hashicorp/tls"
       version = "~> 4.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.4.3"
+    }
+  }
+  backend "azurerm" {
+      resource_group_name  = "serbeniuk"
+      storage_account_name = "tfstate35bb1ea7"
+      container_name       = "tfstate"
+      key                  = "terraform.tfstate"
   }
 }
 
 
 provider "azurerm" {
   use_oidc = true
-  features {
-    key_vault {
-      recover_soft_deleted_key_vaults = true
-    }
-  }
-  # Configuration options
+  features {}
 }
 
 provider "tls" {}

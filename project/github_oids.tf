@@ -88,10 +88,19 @@ resource "azuread_application" "this" {
   }
 }
 
+
+# resource "azuread_service_principal" "service_principal" {
+#   application_id = azuread_application.app_service_principal.application_id
+#   app_role_assignment_required = false
+#   owners = [
+#     data.azuread_client_config.current.object_id
+#   ]
+# }
+
 resource "azuread_service_principal" "this" {
   client_id                    = azuread_application.this.client_id
   app_role_assignment_required = false
-  #   owners                       = [data.azuread_client_config.current.object_id, data.azuread_user.this.object_id]
+  owners                       = [data.azuread_client_config.current.object_id, data.azuread_user.this.object_id]
   #   lifecycle {
   #     prevent_destroy = false
   #   }

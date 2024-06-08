@@ -40,49 +40,13 @@ resource "azuread_application" "this" {
     resource_access {
       # "User.Read.All"
       # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
-      id   = "e1fe6dd8-ba31-4d61-89e7-88639da4683d"
-      type = "Scope"
-    }
-    resource_access {
-      # "User.Read.All"
-      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
       id   = "1bfefb4e-e0b5-418b-a88f-73c46d2cc8e9"
       type = "Role"
     }
     resource_access {
       # "User.Read.All"
       # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
-      id   = "62a82d76-70ea-41e2-9197-370581804d09"
-      type = "Role"
-    }
-    resource_access {
-      # "User.Read.All"
-      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
-      id   = "19dbc75e-c2e2-444c-a770-ec69d8559fc7"
-      type = "Role"
-    }
-    resource_access {
-      # "User.Read.All"
-      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
-      id   = "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30"
-      type = "Role"
-    }
-    resource_access {
-      # "User.Read.All"
-      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
-      id   = "dbaae8cf-10b5-4b86-a4a1-f871c94c6695"
-      type = "Role"
-    }
-    resource_access {
-      # "User.Read.All"
-      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
-      id   = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
-      type = "Role"
-    }
-    resource_access {
-      # "User.Read.All"
-      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
-      id   = "3afa6a7d-9b1a-42eb-948e-1650a849e176"
+      id   = "06b708a9-e830-4db3-a914-8e69da51d44f"
       type = "Role"
     }
   }

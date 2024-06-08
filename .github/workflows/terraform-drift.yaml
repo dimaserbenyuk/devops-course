@@ -14,8 +14,7 @@ permissions:
 jobs:
   terraform-plan:
     runs-on: ubuntu-latest
-    name: terraform-plan
-    needs: [terraform-tests]
+    name: terraform-plans
     defaults:
       run:
         working-directory: ./project

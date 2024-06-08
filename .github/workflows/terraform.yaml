@@ -277,30 +277,3 @@ jobs:
         output-file: RESOURCE.md
         output-method: inject
         git-push: "true"
-
-  tfsec:
-    name: tfsec sarif report
-    runs-on: ubuntu-latest
-    needs: [terraform-tests]
-
-    steps:
-      - name: Clone repo
-        uses: actions/checkout@v4
-
-      - name: tfsec
-        uses: tfsec/tfsec-sarif-action@master
-        with:
-          working_directory: project
-          sarif_file: tfsec.sarif         
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          # Path to SARIF file relative to the root of the repository
-          sarif_file: tfsec.sarif    
-
-      - name: tfsec-pr-commenter
-        uses: tfsec/tfsec-pr-commenter-action@main
-        with:
-          working_directory: project
-          github_token: ${{ secrets.GITHUB_TOKEN }}

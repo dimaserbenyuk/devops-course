@@ -20,8 +20,6 @@ resource "azuread_application" "this" {
   }
   owners = [data.azuread_client_config.current.object_id, data.azuread_user.this.object_id]
 
-
-
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result.MicrosoftGraph
 
@@ -51,15 +49,6 @@ resource "azuread_application" "this" {
     }
   }
 }
-
-
-# resource "azuread_service_principal" "service_principal" {
-#   application_id = azuread_application.app_service_principal.application_id
-#   app_role_assignment_required = false
-#   owners = [
-#     data.azuread_client_config.current.object_id
-#   ]
-# }
 
 resource "azuread_service_principal" "this" {
   client_id                    = azuread_application.this.client_id

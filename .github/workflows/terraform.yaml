@@ -222,13 +222,6 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    - name: t
-      run: |
-        ls -la
-
-    - name: t
-      run: |
-        pwd
     # Terraform Apply
     - name: Terraform Apply
       id: tf-apply
@@ -268,3 +261,11 @@ jobs:
                 repo: context.repo.repo,
                 body: body
             })
+
+    - name: Render terraform docs inside the RESOURCE.md and push changes back to PR branch
+      uses: terraform-docs/gh-actions@v1.2.0
+      with:
+        working-dir: project
+        output-file: RESOURCE.md
+        output-method: inject
+        git-push: "true"

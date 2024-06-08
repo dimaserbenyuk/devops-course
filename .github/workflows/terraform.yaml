@@ -281,7 +281,7 @@ jobs:
   tfsec:
     name: tfsec sarif report
     runs-on: ubuntu-latest
-    needs: [terraform-plan]
+    needs: [terraform-tests]
 
     steps:
       - name: Clone repo

@@ -10,7 +10,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
   statuses: write
@@ -262,10 +262,18 @@ jobs:
                 body: body
             })
 
-    # - name: Render terraform docs inside the RESOURCE.md and push changes back to PR branch
-    #   uses: terraform-docs/gh-actions@v1.2.0
-    #   with:
-    #     working-dir: project
-    #     output-file: RESOURCE.md
-    #     output-method: inject
-    #     git-push: "true"
+  docs:
+    runs-on: ubuntu-latest
+    needs: [terraform-apply]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Render terraform docs inside the RESOURCE.md and push changes back to PR branch
+      uses: terraform-docs/gh-actions@v1.2.0
+      with:
+        working-dir: project
+        output-file: RESOURCE.md
+        output-method: inject
+        git-push: "true"

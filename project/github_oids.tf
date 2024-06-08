@@ -20,6 +20,8 @@ resource "azuread_application" "this" {
   }
   owners = [data.azuread_client_config.current.object_id, data.azuread_user.this.object_id]
 
+
+
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result.MicrosoftGraph
 
@@ -35,13 +37,34 @@ resource "azuread_application" "this" {
       id   = "df021288-bdef-4463-88db-98f22de89214"
       type = "Role"
     }
+    resource_access {
+      # "User.Read.All"
+      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
+      id   = "1bfefb4e-e0b5-418b-a88f-73c46d2cc8e9"
+      type = "Role"
+    }
+    resource_access {
+      # "User.Read.All"
+      # hardcoding as the above access to lookup does not exist - references can be found here: https://docs.microsoft.com/en-us/graph/permissions-reference
+      id   = "06b708a9-e830-4db3-a914-8e69da51d44f"
+      type = "Role"
+    }
   }
 }
+
+
+# resource "azuread_service_principal" "service_principal" {
+#   application_id = azuread_application.app_service_principal.application_id
+#   app_role_assignment_required = false
+#   owners = [
+#     data.azuread_client_config.current.object_id
+#   ]
+# }
 
 resource "azuread_service_principal" "this" {
   client_id                    = azuread_application.this.client_id
   app_role_assignment_required = false
-  #   owners                       = [data.azuread_client_config.current.object_id, data.azuread_user.this.object_id]
+  owners                       = [data.azuread_client_config.current.object_id, data.azuread_user.this.object_id]
   #   lifecycle {
   #     prevent_destroy = false
   #   }

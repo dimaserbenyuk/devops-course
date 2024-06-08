@@ -14,7 +14,6 @@
 | <a name="provider_azuread"></a> [azuread](#provider\_azuread) | n/a |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.106.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.4.3 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | ~> 4.0 |
 
 ## Modules
 
@@ -36,7 +35,6 @@ No modules.
 | [azurerm_storage_account.tfstate](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/storage_account) | resource |
 | [azurerm_storage_container.tfstate](https://registry.terraform.io/providers/hashicorp/azurerm/3.106.1/docs/resources/storage_container) | resource |
 | [random_id.storage_account](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/id) | resource |
-| [tls_private_key.vm_ssh_key](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [azuread_application_published_app_ids.well_known](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/application_published_app_ids) | data source |
 | [azuread_client_config.current](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/client_config) | data source |
 | [azuread_user.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/user) | data source |

@@ -290,6 +290,7 @@ jobs:
       - name: tfsec
         uses: tfsec/tfsec-sarif-action@master
         with:
+          working_directory: project
           sarif_file: tfsec.sarif         
 
       - name: Upload SARIF file
@@ -297,3 +298,4 @@ jobs:
         with:
           # Path to SARIF file relative to the root of the repository
           sarif_file: tfsec.sarif    
+          working_directory: project

@@ -15,7 +15,7 @@ terraform {
   }
   backend "azurerm" {
     resource_group_name  = "serbeniuk"
-    storage_account_name = "tfstate35bb1ea7"
+    storage_account_name = "tfstate44be2df5"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
     use_oidc             = true

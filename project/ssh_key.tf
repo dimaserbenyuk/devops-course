@@ -4,6 +4,7 @@ resource "tls_private_key" "vm_ssh_key" {
   rsa_bits  = 4096
 }
 
+
 # resource "azurerm_key_vault_secret" "ssh_private_key" {
 #   name         = "ssh-private-key"
 #   value        = tls_private_key.vm_ssh_key.private_key_pem

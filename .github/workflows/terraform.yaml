@@ -302,4 +302,5 @@ jobs:
       - name: tfsec-pr-commenter
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
+          working_directory: project
           github_token: ${{ secrets.GITHUB_TOKEN }}

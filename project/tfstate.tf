@@ -12,6 +12,7 @@ resource "azurerm_storage_container" "tfstate" {
   container_access_type = "blob"
 }
 
+
 resource "random_id" "storage_account" {
   byte_length = 4
 }

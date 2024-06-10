@@ -4,7 +4,7 @@ data "azuread_application_published_app_ids" "well_known" {}
 
 locals {
   scope    = data.azurerm_subscription.this.id
-  app_name       = "tf-oidc-test-sample"
+  app_name = "tf-oidc-test-sample"
 }
 
 data "azuread_user" "this" {

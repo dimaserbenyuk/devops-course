@@ -51,6 +51,7 @@ EnvironmentName    HomeTenantId                          IsDefault    Name      
 AzureCloud         1d3********************************d1  True         Azure subscription 1  Enabled  dm********************************.com  Default Directory    1d*************************d1
 ```
 
+
 ```terraform
 terraform output -raw sp_password > secureadmin
 ```

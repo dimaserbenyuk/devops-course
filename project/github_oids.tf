@@ -11,6 +11,7 @@ data "azuread_user" "this" {
   user_principal_name = "dmytroserbeniukdev_gmail.com#EXT#@dmytroserbeniukdevgmail.onmicrosoft.com"
 }
 
+
 resource "azuread_application" "this" {
   display_name = local.app_name
   web {

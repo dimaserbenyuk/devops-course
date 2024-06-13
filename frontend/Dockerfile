@@ -54,19 +54,19 @@ RUN npm fund
 RUN npm run build
 
 # bundle static assets with nginx
-FROM nginx:1.21.0-alpine as production
+# FROM nginx:1.21.0-alpine as production
 
 
-ARG NODE_ENV=development
-ENV NODE_ENV $NODE_ENV
-# # remove existing files from nginx directory
-RUN rm -rf /usr/share/nginx/html/*
-# # copy built assets from 'builder' stage
-COPY --from=builder /todo/.next/ /usr/share/nginx/html
-# add nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-# expose port 80 for nginx
-EXPOSE 80
-# start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# ARG NODE_ENV=development
+# ENV NODE_ENV $NODE_ENV
+# # # remove existing files from nginx directory
+# RUN rm -rf /usr/share/nginx/html/*
+# # # copy built assets from 'builder' stage
+# COPY --from=builder /todo/.next/ /usr/share/nginx/html
+# # add nginx config
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# # expose port 80 for nginx
+# EXPOSE 80
+# # start nginx
+# CMD ["nginx", "-g", "daemon off;"]
 # CMD ["npm","start"]

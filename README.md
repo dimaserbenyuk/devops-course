@@ -54,3 +54,29 @@ AzureCloud         1d3********************************d1  True         Azure sub
 ```terraform
 terraform output -raw sp_password > secureadmin
 ```
+
+```shell
+
+mongodb git:(nextjs-docker) ✗ mongosh   
+Current Mongosh Log ID: 666a8f5cafb1a67a700a25d4
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.6
+Using MongoDB:          7.0.11
+Using Mongosh:          2.2.6
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-06-13T08:18:50.841+02:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+```
+
+```
+rs.initiate({_id:"rs0", members: [{_id:0, host:"127.0.0.1:27017", priority:100}, {_id:1, host:"127.0.0.1:27018", priority:50}, {_id:2, host:"127.0.0.1:27019", arbiterOnly:true}]})
+
+```
+
+```
+{ ok: 1 }
+

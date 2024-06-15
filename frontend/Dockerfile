@@ -30,8 +30,6 @@ FROM base as final
 
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
-RUN npx prisma generate
-
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/.next/static ./.next/static
@@ -41,6 +39,7 @@ COPY --from=build /app/.env/ ./.env
 COPY --from=build /app/prisma/* ./prisma/
 COPY --from=build /app/next.config.js ./
 COPY --from=build /app/tailwind.config.ts ./
+RUN npx prisma generate
 
 EXPOSE 3000
 

@@ -1,72 +1,56 @@
-# FROM node:18-alpine AS runtime
-# WORKDIR /app
-# COPY package*.json ./
-# RUN npm ci --only=production
-# COPY .next ./.next
-# COPY public ./public
+# FROM node:18-buster  AS base
 
-# # Set the environment variable to production
-# ENV NODE_ENV=production
+# Install dependencies only when needed
+ARG NODE_VERSION=20.11.0
 
-# # Run postinstall script to generate Prisma client
-# RUN npm run postinstall
+FROM node:${NODE_VERSION}-alpine as base
 
-# EXPOSE 3000
-# USER node
-# CMD ["npm","start"]
+WORKDIR /app
 
-# using staged builds
-FROM node:18-buster as builder
-# make the directory where the project files will be stored
-# set it as the working directory so that we don't need to keep referencing it
-WORKDIR /todo
-# Copy the package.json file
-COPY package*.json tailwind.config.ts tsconfig.json postcss.config.js /todo/
+# Install dependencies based on the preferred package manager
+COPY package.json package-lock.json*  ./
 
-# RUN npm ci
+FROM base as deps
 
-RUN npm install
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev
 
-# ENV NODE_ENV development
-ENV PORT 3000
+FROM deps as build
 
-ARG NODE_ENV=development
-ENV NODE_ENV $NODE_ENV
-# COPY .next ./.next
-# COPY public ./public
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=cache,target=/root/.npm \
+    npm run postinstall \
+    npm ci
 
-# install project dependencies
-# RUN npm install
-# copy project files 
-# make sure to set up .dockerignore to copy only necessary files
 COPY . .
 
-# ARG NODE_ENV=production
-# ENV NODE_ENV $NODE_ENV
-# ENV PORT 3000
-# run the build command which will build and export html files
-
-# RUN npm ci
-
-RUN npm fund
-
-
+RUN npx prisma generate
 RUN npm run build
 
-# bundle static assets with nginx
-# FROM nginx:1.21.0-alpine as production
+FROM base as final
+
+ARG NODE_ENV=production
+ENV NODE_ENV $NODE_ENV
 
 
-# ARG NODE_ENV=development
-# ENV NODE_ENV $NODE_ENV
-# # # remove existing files from nginx directory
-# RUN rm -rf /usr/share/nginx/html/*
-# # # copy built assets from 'builder' stage
-# COPY --from=builder /todo/.next/ /usr/share/nginx/html
-# # add nginx config
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-# # expose port 80 for nginx
-# EXPOSE 80
-# # start nginx
-# CMD ["nginx", "-g", "daemon off;"]
-# CMD ["npm","start"]
+# USER node
+COPY package.json .
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=build /app/public ./public
+COPY --from=build /app/.next/ ./.next
+COPY --from=build /app/.env/ ./.env
+COPY --from=build /app/prisma/* ./prisma/
+COPY --from=build /app/next.config.js ./
+COPY --from=build /app/tailwind.config.ts ./
+
+RUN npx prisma generate
+
+
+EXPOSE 3000
+
+CMD ["npm","start"]
+
+# CMD ["sleep", "3000"]

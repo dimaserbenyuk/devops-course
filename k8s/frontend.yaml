@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nextjs-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nextjs-app
+  template:
+    metadata:
+      labels:
+        app: my-nextjs-app
+    spec:
+      containers:
+        - name: my-nextjs-app
+          image: frontend44be2df5.azurecr.io/nextjs:v0.6
+          imagePullPolicy: IfNotPresent
+          # env:
+            # - name: DATABASE_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: database-url-secret
+            #       key: DATABASE_URL
+          env:
+            - name: DATABASE_URL
+              value: "mongodb+srv://***********/todo"
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 300m
+              memory: 384Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+      imagePullSecrets:
+        - name: acr
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: "selfsigned-issuer"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: nginx.dima.com
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: my-nextjs-app
+                port:
+                  number: 3000
+            path: /
+  tls:
+    - hosts:
+      - nginx.dima.com
+      secretName: example-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nextjs-app
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: my-nextjs-app
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: selfsigned-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: selfsigned-ca
+  secretName: root-secret
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+    - nginx.example.com
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ca-issuer
+spec:
+  ca:
+    secretName: root-secret

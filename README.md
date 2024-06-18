@@ -55,6 +55,43 @@ AzureCloud         1d3********************************d1  True         Azure sub
 terraform output -raw sp_password > secureadmin
 ```
 
+[MongoDB Community Edition](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
+
+To install MongoDB, run the following command in your macOS Terminal application
+
+```
+brew install mongodb-community@7.0
+```
+
+The installation includes the following binaries:
+
+- The `mongod` server
+
+- The `mongos` sharded cluster query router
+
+- The MongoDB Shell, `mongosh`
+
+```config
+Intel Processor configuration file
+/usr/local/etc/mongod.conf
+/usr/local/var/log/mongodb
+/usr/local/var/mongodb
+
+Apple Silicon Processor
+/opt/homebrew/etc/mongod.conf
+/opt/homebrew/var/log/mongodb
+/opt/homebrew/var/mongodb
+```
+
+```sh
+brew services list
+
+brew services start mongodb-community@7.0
+
+brew services stop mongodb-community@7.0
+```
+
+
 ```shell
 
 mongodb git:(nextjs-docker) ✗ mongosh   

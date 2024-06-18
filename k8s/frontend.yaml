@@ -278,11 +278,7 @@ spec:
 #         - name: nextjs-shared-volume
 #           emptyDir: {}
 
-# kubectl create secret docker-registry acr \
-#     --namespace default \
-#     --docker-server=frontend44be2df5.azurecr.io \
-#     --docker-username=frontend44be2df5 \
-#     --docker-password=NHQdTFR+N//RPabwJZ4RYszNtvdmvGp6dv39nd9rN5+ACRCH7bfh
+
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer

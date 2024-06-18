@@ -84,8 +84,3 @@ spec:
           resources:
             requests:
               storage: 1Gi
-
-
-  # mongodb+srv://serbeniuk:MQaXnM%N36GMt#@mongoserbeniuk.mongocluster.cosmos.azure.com/todo?retryWrites=true&w=majority
-
-  # mongodb+srv://<user>:<password>@mongoserbeniuk.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000

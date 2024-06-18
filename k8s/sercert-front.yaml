@@ -4,4 +4,4 @@ metadata:
   name: database-url-secret
 type: Opaque
 data:
-  DATABASE_URL: REFUQUJBU0VfVVJMPW1vbmdvZGIrc3J2Oi8vc2VyYmVuaXVrOml4U1hWd0FMcElPeFlwaTFAdG9kby5kanJnMWJhLm1vbmdvZGIubmV0L3RvZG8=
+  DATABASE_URL: <db>

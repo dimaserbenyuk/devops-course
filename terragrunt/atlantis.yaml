@@ -1,0 +1,227 @@
+automerge: false
+parallel_apply: true
+parallel_plan: true
+projects:
+- autoplan:
+    enabled: false
+    when_modified:
+    - '*.hcl'
+    - '*.tf*'
+    - ../../../terragrunt.hcl
+  dir: env/dc02/account
+  terraform_version: v1.5.0
+- autoplan:
+    enabled: false
+    when_modified:
+    - '*.hcl'
+    - '*.tf*'
+    - ../../../terragrunt.hcl
+  dir: env/dc02/acm
+  terraform_version: v1.5.0
+- autoplan:
+    enabled: false
+    when_modified:
+    - '*.hcl'
+    - '*.tf*'
+    - ../../../terragrunt.hcl
+  dir: env/dc02/eks
+  terraform_version: v1.5.0
+version: 3
+workflows:
+  terragrunt-azure:
+    apply:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run: sops exec-env ../terraform-secrets.enc.yaml "terragrunt apply -auto-approve
+          $PLANFILE"
+    plan:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run: gpg --batch --import /atlantis-data/keys/sops.key
+      - run: echo $SOPS_GPG_PASSPHRASE | gpg --batch --always-trust --yes --passphrase-fd
+          0 --pinentry-mode=loopback -s
+      - run: sops exec-env ../terraform-secrets.enc.yaml "terragrunt plan -input=false
+          -out=$PLANFILE"
+      - run: sops exec-env ../terraform-secrets.enc.yaml "terragrunt show -json $PLANFILE"
+          > $SHOWFILE
+    policy_check:
+      steps:
+      - run: rm -rf atlantis-policy/
+      - run: mkdir atlantis-policy/
+      - run: cp -R $ATLANTIS_DATA_DIR/repos/$HEAD_REPO_OWNER/$BASE_REPO_NAME/$PULL_NUM/$WORKSPACE/tests/atlantis/conftest_tests/*
+          atlantis-policy/
+      - policy_check:
+          extra_args:
+          - --all-namespaces
+  terragrunt-azure-kube-addons:
+    apply:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run: sops exec-env ../terraform-secrets.enc.yaml "terragrunt apply -auto-approve
+          $PLANFILE"
+    plan:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run: gpg --batch --import /atlantis-data/keys/sops.key
+      - run: echo $SOPS_GPG_PASSPHRASE | gpg --batch --always-trust --yes --passphrase-fd
+          0 --pinentry-mode=loopback -s
+      - run: sops exec-env ../terraform-secrets.enc.yaml "terragrunt plan -input=false
+          -out=$PLANFILE"
+      - run: sops exec-env ../terraform-secrets.enc.yaml "terragrunt show -json $PLANFILE"  >
+          $SHOWFILE
+      - run: |
+          ENV_NAME=$(echo $PROJECT_NAME | cut -d '-' -f1)
+          count_revisions=$(curl -s -m 15 'https://prometheus.lotusflare.info/api/v1/query' -d 'query=cilium_version{dc='\"$ENV_NAME\"'}' | jq '.data.result[] | .metric.controller_revision_hash' | tr -d '\"' | sort -n | uniq -c | wc -l | tr -d ' ')
+          if [[ $count_revisions -ne 1 ]];then
+            check_url=$(echo 'https://prometheus.lotusflare.info/select/0/vmui/?g0.expr=sum(cilium_version%7Bdc%3D'\"$ENV_NAME\"'%7D)%20by%20(version%2Ccontroller_revision_hash%2Cdc%2Cinstance%2Ckubernetes_pod_name)&g0.tab=1')
+            printf '\033[31m%s\033[0m\n' '#####################'
+            printf '\033[31m%s\033[0m\n' '#     IMPORTANT     #'
+            printf '\033[31m%s\033[0m\n' '#####################'
+            printf '\033[31m%s\033[0m\n' 'Cilium agents are NOT updated on '$ENV_NAME''
+            printf '\033[31m%s\033[0m\n' 'Check the link'
+            printf '\033[31m%s\033[0m\n' $check_url
+          else
+            printf '\033[42m%s\033[0m\n' 'All cilium agents are up to date'
+          fi
+    policy_check:
+      steps:
+      - run: rm -rf atlantis-policy/
+      - run: mkdir atlantis-policy/
+      - run: cp -R $ATLANTIS_DATA_DIR/repos/$HEAD_REPO_OWNER/$BASE_REPO_NAME/$PULL_NUM/$WORKSPACE/tests/atlantis/conftest_tests/*
+          atlantis-policy/
+      - policy_check:
+          extra_args:
+          - --all-namespaces
+  terragrunt-dont-apply:
+    apply:
+      steps:
+      - run: echo "use terragrunt-pipeline to apply"
+    plan:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run: terragrunt plan -input=false -out=$PLANFILE
+      - run: terragrunt show -json $PLANFILE > $SHOWFILE
+    policy_check:
+      steps:
+      - run: |
+          rm -rf atlantis-policy/
+          mkdir atlantis-policy/
+          cp -R $ATLANTIS_DATA_DIR/repos/$HEAD_REPO_OWNER/$BASE_REPO_NAME/$PULL_NUM/$WORKSPACE/tests/atlantis/conftest_tests/* atlantis-policy/
+      - show
+      - policy_check:
+          extra_args:
+          - --all-namespaces
+  terragrunt-kube-addons:
+    apply:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run: terragrunt apply -auto-approve $PLANFILE
+    plan:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run: terragrunt plan -input=false -out=$PLANFILE
+      - run: terragrunt show -json $PLANFILE > $SHOWFILE
+      - run: |
+          ENV_NAME=$(echo $PROJECT_NAME | cut -d '-' -f1)
+          count_revisions=$(curl -s -m 15 'https://prometheus.lotusflare.info/api/v1/query' -d 'query=cilium_version{dc='\"$ENV_NAME\"'}' | jq '.data.result[] | .metric.controller_revision_hash' | tr -d '\"' | sort -n | uniq -c | wc -l | tr -d ' ')
+          if [[ $count_revisions -ne 1 ]];then
+            check_url=$(echo 'https://prometheus.lotusflare.info/select/0/vmui/?g0.expr=sum(cilium_version%7Bdc%3D'\"$ENV_NAME\"'%7D)%20by%20(version%2Ccontroller_revision_hash%2Cdc%2Cinstance%2Ckubernetes_pod_name)&g0.tab=1')
+            printf '\033[31m%s\033[0m\n' '#####################'
+            printf '\033[31m%s\033[0m\n' '#     IMPORTANT     #'
+            printf '\033[31m%s\033[0m\n' '#####################'
+            printf '\033[31m%s\033[0m\n' 'Cilium agents are NOT updated on '$ENV_NAME''
+            printf '\033[31m%s\033[0m\n' 'Check the link'
+            printf '\033[31m%s\033[0m\n' $check_url
+          else
+            printf '\033[42m%s\033[0m\n' 'All cilium agents are up to date'
+          fi
+    policy_check:
+      steps:
+      - run: |
+          rm -rf atlantis-policy/
+          mkdir atlantis-policy/
+          cp -R $ATLANTIS_DATA_DIR/repos/$HEAD_REPO_OWNER/$BASE_REPO_NAME/$PULL_NUM/$WORKSPACE/tests/atlantis/conftest_tests/* atlantis-policy/
+      - policy_check:
+          extra_args:
+          - --all-namespaces
+  terragrunt-run-all:
+    apply:
+      steps:
+      - env:
+          name: TF_IN_AUTOMATION
+          value: "true"
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          command: echo $COMMENT_ARGS | tr ',' ' ' | sed -r 's/\\(.)/\1/g'
+          name: TERRAGRUNT_CLI_ARGS
+      - run: terragrunt run-all apply plan.out --terragrunt-non-interactive $TERRAGRUNT_CLI_ARGS
+    plan:
+      steps:
+      - env:
+          command: echo "/atlantis-data/bin/terraform$ATLANTIS_TERRAFORM_VERSION"
+          name: TERRAGRUNT_TFPATH
+      - env:
+          name: TF_IN_AUTOMATION
+          value: "true"
+      - env:
+          command: echo $COMMENT_ARGS | tr ',' ' ' | sed -r 's/\\(.)/\1/g'
+          name: TERRAGRUNT_CLI_ARGS
+      - env:
+          name: TF_CLI_ARGS
+          value: -no-color
+      - run:
+          command: terragrunt run-all --terragrunt-ignore-external-dependencies --terragrunt-non-interactive
+            plan -out plan.out $TERRAGRUNT_CLI_ARGS
+          output: hide
+      - run: terragrunt run-all --terragrunt-ignore-external-dependencies --terragrunt-non-interactive
+          show plan.out
+      - run: terragrunt run-all --terragrunt-ignore-external-dependencies --terragrunt-non-interactive
+          show -json plan.out > show.json
+    policy_check:
+      steps:
+      - run: rm -rf atlantis-policy/
+      - run: mkdir atlantis-policy/
+      - run: cp -R $ATLANTIS_DATA_DIR/repos/$HEAD_REPO_OWNER/$BASE_REPO_NAME/$PULL_NUM/$WORKSPACE/tests/atlantis/conftest_tests/*
+          atlantis-policy/
+      - run: touch $PLANFILE
+      - run: jq -n '[inputs]' show.json > $SHOWFILE
+      - policy_check:
+          extra_args:
+          - --all-namespaces

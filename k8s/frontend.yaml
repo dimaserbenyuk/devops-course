@@ -1,0 +1,325 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nextjs-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nextjs-app
+  template:
+    metadata:
+      labels:
+        app: my-nextjs-app
+    spec:
+      containers:
+        - name: my-nextjs-app
+          image: frontend44be2df5.azurecr.io/nextjs:v0.6
+          imagePullPolicy: IfNotPresent
+          # env:
+            # - name: DATABASE_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: database-url-secret
+            #       key: DATABASE_URL
+          env:
+            - name: DATABASE_URL
+              value: "mongodb+srv://serbeniuk:ixSXVwALpIOxYpi1@todo.djrg1ba.mongodb.net/todo"
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 300m
+              memory: 384Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+        # - name: medium-nginx-app
+        #   image: frontend44be2df5.azurecr.io/nginx:v0.2
+        #   imagePullPolicy: Always
+        #   env:
+        #     - name: NEXTJS_CONTAINER_IP
+        #       value: localhost
+        #   resources:
+        #     limits:
+        #       cpu: 300m
+        #       memory: 384Mi
+        #     requests:
+        #       cpu: 200m
+        #       memory: 256Mi
+        #   command: ['sh', '-c', '/etc/nginx/convert-nginx.sh']
+          # volumeMounts:
+          # - name: persistent-storage
+          #   mountPath: /app/.next
+          # - name: node-modules
+          #   mountPath: /app/node_modules
+          # volumeMounts:
+          #   - name: nextjs-app-build
+          #     mountPath: /app
+      imagePullSecrets:
+        - name: acr
+      #     volumeMounts:
+      #       - name: nextjs-app-build
+      #         mountPath: /app
+      #       - name: node-modules
+      #         mountPath: /app/node_modules
+      #       - name: next
+      #         mountPath: /app/.next
+      #       - name: prisma
+      #         mountPath: /app/prisma
+      # volumes:
+      #   - name: persistent-storage
+      #     persistentVolumeClaim:
+      #       claimName: nextjs-app-build-pvc
+      # volumes:
+      #   - name: nextjs-app-build
+      #     persistentVolumeClaim:
+      #       claimName: nextjs-app-build-pvc
+        # - name: node-modules
+        #   persistentVolumeClaim:
+        #     claimName: node-modules-pvc
+      #   - name: next
+      #     persistentVolumeClaim:
+      #       claimName: next-pvc
+      #   - name: prisma
+      #     persistentVolumeClaim:
+      #       claimName: prisma-pvc
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: "selfsigned-issuer"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: nginx.dima.com
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: my-nextjs-app
+                port:
+                  number: 3000
+            path: /
+  # This section is only required if TLS is to be enabled for the Ingress
+  tls:
+    - hosts:
+      - nginx.dima.com
+      secretName: example-tls
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: nginx-ingress-nextjs
+#   namespace: default
+#   annotations:
+#     # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+#     # cert-manager.io/issuer: "nginx-tls"
+#     # cert-manager.io/duration: 2160h # 90d
+#     # cert-manager.io/renew-before: 360h # 15d
+#     cert-manager.io/cluster-issuer: "selfsigned-issuer"
+#     # kubernetes.io/ingress.class: nginx
+# spec:
+#   tls:
+#   - hosts:
+#     - nginx.dima.com
+#     secretName: nginx-tls
+#   ingressClassName: nginx
+#   rules:
+#   - host: nginx.dima.com
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: my-nextjs-app
+#             port:
+#               number: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nextjs-app
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: my-nextjs-app
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: nextjs-app-build-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: node-modules-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: next-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: prisma-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata: #<name of the Service>
+#   #kubectl create service <name of service>
+#   name: nextjs-app-service
+# spec: # this spec corresponds to config of service object
+#   selector:
+#     app: my-nextjs-app # we are targetting the pod with these labels(these key value pairs)
+#   # kubectl expose deployment <deplo name> --port=...  --type: LoadBalancer
+#   # services have simple syntax for selecting pods unlike deployments which have nested and more powerful deployment syntax.
+
+#   ports:
+#     - protocol: 'TCP'
+#       port: 80 # outside world exposed port
+#       targetPort: 80 # containers internal port
+#   # type: ClustorIP
+#   # type: NodePort
+#   type: ClusterIP # outside world access
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nextjs-app-deployment
+# spec:
+#   replicas: 1 
+#   selector:
+#     matchLabels:
+#       app: nextjs-app
+#   template: 
+#     metadata:
+#       labels: 
+#         app: nextjs-app
+#     spec:
+#       # initContainers:
+#       #   - name: init-container-nextjs
+#       #     image: frontend44be2df5.azurecr.io/nextjs:v0.1
+#       #     command: ['sh', '-c', 'cp -r /app/* /temp']
+#       #     volumeMounts:
+#       #       - name: nextjs-shared-volume
+#       #         mountPath: /temp
+#       containers:
+#         - name: medium-nextjs-app
+#           image: frontend44be2df5.azurecr.io/nextjs:v0.1
+#           imagePullPolicy: Always
+#           resources:
+#             limits:
+#               cpu: 300m
+#               memory: 384Mi
+#             requests:
+#               cpu: 200m
+#               memory: 256Mi
+#           command: ['npm', 'start']
+#           volumeMounts:
+#             - name: nextjs-shared-volume
+#               mountPath: /app
+
+#         # - name: medium-nginx-app
+#         #   image: frontend44be2df5.azurecr.io/nextjs:v0.1
+#         #   imagePullPolicy: Always
+#         #   env:
+#         #     - name: NEXTJS_CONTAINER_IP
+#         #       value: localhost
+#       # resources:
+#       #   limits:
+#       #     cpu: 300m
+#       #     memory: 384Mi
+#       #   requests:
+#       #     cpu: 200m
+#       #     memory: 256Mi
+#           # command: ['sh', '-c', '/etc/nginx/convert-nginx.sh']
+#       # volumeMounts:
+#       #   - name: nextjs-shared-volume
+#       #     mountPath: /app
+#       imagePullSecrets:
+#         - name: acr
+#       volumes:
+#         - name: nextjs-shared-volume
+#           emptyDir: {}
+
+# kubectl create secret docker-registry acr \
+#     --namespace default \
+#     --docker-server=frontend44be2df5.azurecr.io \
+#     --docker-username=frontend44be2df5 \
+#     --docker-password=NHQdTFR+N//RPabwJZ4RYszNtvdmvGp6dv39nd9rN5+ACRCH7bfh
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: selfsigned-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: selfsigned-ca
+  secretName: root-secret
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  usages:
+    - server auth
+    - client auth
+  # At least one of a DNS Name, URI, IP address or otherName is required.
+  dnsNames:
+    - nginx.example.com
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ca-issuer
+spec:
+  ca:
+    secretName: root-secret

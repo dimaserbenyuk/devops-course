@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.2...frontend-v0.0.3) (2024-06-23)
+
+
+### Bug Fixes
+
+* docker ([9d49010](https://github.com/dimaserbenyuk/devops-course/commit/9d490102f88acfb447a5fed0dcfbd28cdc7ed07c))
+* docker ([219c6fc](https://github.com/dimaserbenyuk/devops-course/commit/219c6fc060d4af8703f8c6ddad28292aa966a967))
+
 ## [0.0.2](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.1...frontend-v0.0.2) (2024-06-23)
 
 

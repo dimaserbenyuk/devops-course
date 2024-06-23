@@ -25,11 +25,11 @@ jobs:
           manifest-file: .github/manifests/frontend.json
 
       - name: actions/checkout
-        if: ${{ steps.release.outputs.releases_created }}
+        # if: ${{ steps.release.outputs.releases_created }}
         uses: actions/checkout@v4
 
       - name: tag major and minor versions
-        if: ${{ steps.release.outputs.releases_created }}
+        # if: ${{ steps.release.outputs.releases_created }}
         env:
           pkg: frontend
         run: |

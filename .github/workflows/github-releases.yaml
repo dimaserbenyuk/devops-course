@@ -24,8 +24,8 @@ jobs:
           config-file: .github/releases/frontend.json
           manifest-file: .github/manifests/frontend.json
 
-      - name: tag major and minor versions
-        if: ${{ steps.release.outputs.releases_created }}
+      - name: git
+        # if: ${{ steps.release.outputs.releases_created }}
         uses: actions/checkout@v4
 
       - name: tag major and minor versions

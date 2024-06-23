@@ -6,7 +6,6 @@ FROM node:${NODE_VERSION}-alpine as base
 
 WORKDIR /app
 
-
 COPY package.json package-lock.json*  ./
 
 FROM base as deps

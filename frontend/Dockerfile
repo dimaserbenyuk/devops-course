@@ -7,6 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json*  ./
 
 FROM base as deps
+
 RUN apk add --no-cache libc6-compat
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \

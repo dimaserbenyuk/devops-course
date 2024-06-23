@@ -24,8 +24,8 @@ jobs:
           config-file: .github/releases/frontend.json
           manifest-file: .github/manifests/frontend.json
 
-      - name: git
-        # if: ${{ steps.release.outputs.releases_created }}
+      - name: actions/checkout
+        if: ${{ steps.release.outputs.releases_created }}
         uses: actions/checkout@v4
 
       - name: tag major and minor versions
@@ -35,17 +35,12 @@ jobs:
         run: |
           git config user.name "release"
           git config user.email "release@release-bot.com"
-          
-          # Delete existing tags if they exist
-          git tag -d ${pkg}-v${{ steps.release.outputs['frontend--major'] }} 2>/dev/null || true
-          git tag -d ${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }} 2>/dev/null || true
-          git push origin :${pkg}-v${{ steps.release.outputs['frontend--major'] }} 2>/dev/null || true
-          git push origin :${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }} 2>/dev/null || true
-          
-          # Create new tags
-          git tag -a ${pkg}-v${{ steps.release.outputs['frontend--major'] }} -m "Release v${{ steps.release.outputs['frontend--major'] }}"
-          git tag -a ${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }} -m "Release v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }}"
-          
-          # Push new tags
-          git push origin ${pkg}-v${{ steps.release.outputs['frontend--major'] }}
-          git push origin ${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }}
+          git remote add gh-token "https://${{ secrets.MY_RELEASE_PLEASE_TOKEN }}@github.com/google-github-actions/release-please-action.git"
+          git tag -d v${{ steps.release.outputs.major }} || true
+          git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git push origin :v${{ steps.release.outputs.major }} || true
+          git push origin :v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git tag -a v${{ steps.release.outputs.major }} -m "Release v${{ steps.release.outputs.major }}"
+          git tag -a v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} -m "Release v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}"
+          git push origin v${{ steps.release.outputs.major }}
+          git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}

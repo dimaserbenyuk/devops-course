@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker-build:
+  frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Create a release from release PRs
@@ -18,3 +18,24 @@ jobs:
           command: manifest
           config-file: .github/releases/frontend.json
           manifest-file: .github/manifests/frontend.json
+
+      - name: tag major and minor versions
+        if: ${{ steps.release.outputs.releases_created }}
+        uses: actions/checkout@v4
+
+      - name: tag major and minor versions
+        if: ${{ steps.release.outputs.releases_created }}
+        env:
+          pkg: frontend
+        run: |
+          git config user.name release
+          git config user.email release@lotusflare.com
+          git remote add gh-token "https://${{ steps.release.outputs.token }}@github.com/google-github-actions/release-please-action.git"
+          git tag -d ${pkg}-v${{ steps.release.outputs['frontend--major'] }} || true
+          git tag -d ${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }} || true
+          git push origin :${pkg}-v${{ steps.release.outputs['frontend--major'] }} || true
+          git push origin :${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }} || true
+          git tag -a ${pkg}-v${{ steps.release.outputs['frontend--major'] }} -m "Release v${{ steps.release.outputs['frontend--major'] }}"
+          git tag -a ${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }} -m "Release v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }}"
+          git push origin ${pkg}-v${{ steps.release.outputs['frontend--major'] }}
+          git push origin ${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }}

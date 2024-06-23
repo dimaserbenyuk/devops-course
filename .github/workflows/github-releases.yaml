@@ -1,5 +1,11 @@
 name: dispatch-trigger-github-releases
 
+
+permissions:
+  contents: write
+  pull-requests: write
+  repository-projects: write
+
 on:
   push:
     branches:

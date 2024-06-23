@@ -29,8 +29,8 @@ jobs:
           pkg: frontend
         run: |
           git config user.name release
-          git config user.email release@lotusflare.com
-          git remote add gh-token "https://${{ steps.release.outputs.token }}@github.com/google-github-actions/release-please-action.git"
+          git config user.email release@release-bot.com
+          git remote add gh-token "https://${{ secrets.MY_RELEASE_PLEASE_TOKEN }}@github.com/google-github-actions/release-please-action.git"
           git tag -d ${pkg}-v${{ steps.release.outputs['frontend--major'] }} || true
           git tag -d ${pkg}-v${{ steps.release.outputs['frontend--major'] }}.${{ steps.release.outputs['frontend--minor'] }} || true
           git push origin :${pkg}-v${{ steps.release.outputs['frontend--major'] }} || true

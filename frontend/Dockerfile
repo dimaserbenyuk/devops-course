@@ -33,7 +33,6 @@ FROM base as final
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
 
-
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/public ./public

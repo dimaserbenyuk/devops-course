@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v1.0.1...frontend-v1.0.2) (2024-06-23)
+
+
+### Bug Fixes
+
+* update ([b7b157f](https://github.com/dimaserbenyuk/devops-course/commit/b7b157fbe83ed42c5249eaea466f233bfdb82b11))
+
 ## [1.0.1](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v1.0.0...frontend-v1.0.1) (2024-06-23)
 
 

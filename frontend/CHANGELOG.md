@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.3...frontend-v0.0.4) (2024-06-23)
+
+
+### Features
+
+* add new user login functionality ([1b2fe88](https://github.com/dimaserbenyuk/devops-course/commit/1b2fe8890e35b5432845f28e8134531e5359f599))
+
 ## [0.0.3](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.2...frontend-v0.0.3) (2024-06-23)
 
 

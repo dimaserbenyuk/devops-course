@@ -1,6 +1,5 @@
 # FROM node:18-buster  AS base
 
-# Install dependencies only when needed
 ARG NODE_VERSION=20.11.0
 
 FROM node:${NODE_VERSION}-alpine as base

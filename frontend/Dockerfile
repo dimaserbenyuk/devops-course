@@ -41,6 +41,7 @@ COPY --from=build /app/.env/ ./.env
 COPY --from=build /app/prisma/* ./prisma/
 COPY --from=build /app/next.config.js ./
 COPY --from=build /app/tailwind.config.ts ./
+
 RUN npx prisma generate
 
 EXPOSE 3000

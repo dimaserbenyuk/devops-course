@@ -48,7 +48,13 @@ jobs:
             type=edge,branch=$repo.default_branch
             type=semver,pattern=v{{version}}
             type=sha,prefix=,suffix=,format=short
-      
+
+      - name: Create secret file from GitHub Secrets
+        run: |
+          echo "${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}" > .env
+          echo "${{ secrets.CLERK_SECRET_KEY }}" > .env
+          echo "${{ secrets.DATABASE_URL }}" > .env
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -59,9 +65,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          secrets: |
-            "secret_1=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}"
-            "secret_2=${{ secrets.CLERK_SECRET_KEY }}"
-            "secret_3=${{ secrets.DATABASE_URL }}"
+          # secrets: |
+          #   "secret_1=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}"
+          #   "secret_2=${{ secrets.CLERK_SECRET_KEY }}"
+          #   "secret_3=${{ secrets.DATABASE_URL }}"
           # cache-from: type=gha
           # cache-to: type=gha,mode=max

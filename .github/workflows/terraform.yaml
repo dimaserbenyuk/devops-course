@@ -28,11 +28,13 @@ jobs:
     steps:
       - uses: theappnest/terraform-monorepo-action@master
         id: directories
-        # with:
-        #   ignore: |
-        #     aws/**/policies
-        #     aws/**/templates
-        #     aws/**/scripts
+        with:
+          ignore: |
+            frontend/**
+            images/**
+            k8s/**
+            mongodb/**
+            nginx/**
       - run: echo ${{ steps.directories.outputs.modules }}
     outputs:
       dirs: ${{ steps.directories.outputs.modules }}

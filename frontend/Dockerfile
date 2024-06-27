@@ -26,14 +26,14 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 
-RUN --mount=type=secret,id=secret_1 \
-    sed -i "s/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$(cat /run/secrets/secret_1)/" .env
+# RUN --mount=type=secret,id=secret_1 \
+#     sed -i "s/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$(cat /run/secrets/secret_1)/" .env
 
-RUN --mount=type=secret,id=secret_2 \
-    sed -i "s/CLERK_SECRET_KEY=/CLERK_SECRET_KEY=$(cat /run/secrets/secret_2)/" .env
+# RUN --mount=type=secret,id=secret_2 \
+#     sed -i "s/CLERK_SECRET_KEY=/CLERK_SECRET_KEY=$(cat /run/secrets/secret_2)/" .env
 
-RUN --mount=type=secret,id=secret_3 \
-    sed -i "s/DATABASE_URL=/DATABASE_URL=$(cat /run/secrets/secret_3)/" .env
+# RUN --mount=type=secret,id=secret_3 \
+#     sed -i "s/DATABASE_URL=/DATABASE_URL=$(cat /run/secrets/secret_3)/" .env
 
 RUN npx prisma generate
 RUN npm run build
@@ -47,7 +47,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/public ./public
 COPY --from=build /app/.next/ ./.next
-COPY --from=build /app/.env/ ./.env
+# COPY --from=build /app/.env/ ./.env
 COPY --from=build /app/prisma/* ./prisma/
 COPY --from=build /app/next.config.js ./
 COPY --from=build /app/tailwind.config.ts ./

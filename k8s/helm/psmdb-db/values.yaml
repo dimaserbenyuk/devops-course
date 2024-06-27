@@ -6,8 +6,8 @@
 # platform: kubernetes
 
 # Cluster DNS Suffix
-clusterServiceDNSSuffix: svc.cluster.local
-clusterServiceDNSMode: "Internal"
+# clusterServiceDNSSuffix: svc.cluster.local
+# clusterServiceDNSMode: "Internal"
 
 finalizers:
 ## Set this if you want that operator deletes the primary pod last
@@ -73,7 +73,7 @@ secrets: {}
   # sse: my-cluster-name-sse
 
 pmm:
-  enabled: true
+  enabled: false
   image:
     repository: percona/pmm-client
     tag: 2.41.2

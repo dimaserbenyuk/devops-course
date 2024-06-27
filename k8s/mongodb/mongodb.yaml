@@ -5,7 +5,7 @@ metadata:
   name: my-mongodb
   namespace: mongodb
 spec:
-  members: 3
+  members: 2
   type: ReplicaSet
   version: "5.0.5"
   security:
@@ -13,15 +13,17 @@ spec:
       modes:
       - SCRAM
   users:
-  - name: admin-user
-    db: admin
+  - name: todo-user
+    db: todo
     passwordSecretRef:
       name: admin-user-password
     roles:
     - name: clusterAdmin
-      db: admin
+      db: todo
     - name: userAdminAnyDatabase
-      db: admin
+      db: todo
+    - name: readWrite
+      db: todo
     scramCredentialsSecretName: my-scram
   security:
     tls:
@@ -30,7 +32,8 @@ spec:
         name: mongodb-key-pair
       caCertificateSecretRef:
         name: mongodb-key-pair
-      # optional: true
+      # allowConnectionsWithoutCertificates: true
+      optional: true
     authentication:
       modes:
       - SCRAM
@@ -62,11 +65,11 @@ spec:
           - name: mongod
             resources:
               limits:
-                cpu: "1"
-                memory: 2Gi
+                cpu: 300m
+                memory: 300Mi
               requests:
-                cpu: 500m
-                memory: 1Gi      
+                cpu: 200m
+                memory: 200Mi      
       volumeClaimTemplates:
       - metadata:
           name: data-volume
@@ -84,3 +87,41 @@ spec:
           resources:
             requests:
               storage: 1Gi
+# mongosh "mongodb+srv://${ADMIN_USER}:${ADMIN_PASSWORD}@psmdb-db-rs0.percona.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
+
+# mongosh "mongodb+srv://admin-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/admin?ssl=true"
+
+# mongodb://admin-user:admin123@my-mongodb-0.my-mongodb-svc.mongodb.svc.cluster.local:27017,my-mongodb-1.my-mongodb-svc.mongodb.svc.cluster.local:27017/admin?ssl=true
+
+
+
+# mongosh \
+#   --tls \
+#   --tlsCAFile /var/lib/tls/ca/ca.crt \
+#   --tlsCertificateKeyFile /var/lib/tls/server/*.pem \
+#   "mongodb+srv://todo-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/todo?ssl=true"
+
+
+# show dbs
+
+# db.createUser(
+#   {
+#     user: 'dima',
+#     pwd: 'devops123',
+#     roles: [ { role: 'readWrite', db: 'todo' } ]
+#   }
+# );
+
+# db.auth('dima', 'devops123')
+
+# use todo
+
+# db.Task.find()
+
+# show collections
+
+# DATABASE_URL=mongodb+srv://admin-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/admin?ssl=true&tlsCAFile=/var/lib/tls/ca.crt&tlsCertificateKeyFile=/var/lib/tls/server.pem
+
+# DATABASE_URL=mongodb+srv://admin-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/admin?ssl=true&tlsCAFile=/var/lib/tls/ca.crt&tlsCertificateKeyFile=/var/lib/tls/server.pem
+
+# DATABASE_URL=mongodb+srv://todo-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/todo?ssl=true&tlsCAFile=/var/lib/tls/ca.crt&tlsCertificateKeyFile=/var/lib/tls/server.pem

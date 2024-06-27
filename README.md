@@ -117,6 +117,7 @@ rs.initiate({_id:"rs0", members: [{_id:0, host:"127.0.0.1:27017", priority:100},
 ```
 { ok: 1 }
 
+
 ```
 
 ```shell
@@ -133,3 +134,6 @@ git commit -m "ci: update TravisCI config to run tests on latest Node versions"
 git commit -m "revert: revert 'feat: add new user login functionality'"
 
 ```
+
+helm install argo-cd argo/argo-cd --values argo-cd/my-values.yaml
+    server.insecure: true

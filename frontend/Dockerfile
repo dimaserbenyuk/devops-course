@@ -25,7 +25,6 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-
 # RUN --mount=type=secret,id=secret_1 \
 #     sed -i "s/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$(cat /run/secrets/secret_1)/" .env
 

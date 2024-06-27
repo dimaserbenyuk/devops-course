@@ -1,0 +1,76 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: production
+spec:
+  acme:
+    email: dserbenyukgood@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: production-cluster-issuer
+    solvers:
+      - selector: {}
+        http01:
+          ingress:
+            class: external-nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: echoserver-v2-secure
+spec:
+  selector:
+    matchLabels:
+      app: echoserver-v2-secure
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: echoserver-v2-secure
+    spec:
+      containers:
+        - image: k8s.gcr.io/e2e-test-images/echoserver:2.5
+          name: echoserver-v2-secure
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: echoserver-v2-secure
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+  type: ClusterIP
+  selector:
+    app: echoserver-v2-secure
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: default
+  name: echoserver-v2-secure
+  annotations:
+    cert-manager.io/cluster-issuer: production
+spec:
+  ingressClassName: external-nginx
+  rules:
+    - host: dmytroserbeniuk.uk
+      http:
+        paths:
+          - path: /
+            pathType: Exact
+            backend:
+              service:
+                name: echoserver-v2-secure
+                port:
+                  number: 8080
+                  
+  tls:
+    - hosts:
+        - dmytroserbeniuk.uk
+      secretName: dmytroserbeniuk-uk

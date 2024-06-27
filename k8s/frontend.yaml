@@ -15,41 +15,39 @@ spec:
     spec:
       containers:
         - name: my-nextjs-app
-          image: frontend44be2df5.azurecr.io/nextjs:v0.6
+          image: frontend44be2df5.azurecr.io/nextjs:v0.1
           imagePullPolicy: IfNotPresent
-          # env:
-            # - name: DATABASE_URL
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: database-url-secret
-            #       key: DATABASE_URL
-          env:
-            - name: DATABASE_URL
-              value: "mongodb+srv://***********/todo"
           ports:
             - containerPort: 3000
           resources:
             limits:
               cpu: 300m
-              memory: 384Mi
+              memory: 300Mi
             requests:
               cpu: 200m
-              memory: 256Mi
+              memory: 200Mi
+          # volumeMounts:
+          #   - name: tls-certs
+          #     mountPath: /var/lib/tls
       imagePullSecrets:
         - name: acr
+      # volumes:
+      #   - name: tls-certs
+      #     secret:
+      #       secretName: tls-secret
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: example
+  name: example-frontend
   namespace: default
   annotations:
-    cert-manager.io/cluster-issuer: "selfsigned-issuer"
+    cert-manager.io/cluster-issuer: production
 spec:
-  ingressClassName: nginx
+  ingressClassName: external-nginx
   rules:
-    - host: nginx.dima.com
+    - host: frontend.dmytroserbeniuk.uk
       http:
         paths:
           - pathType: Prefix
@@ -61,8 +59,8 @@ spec:
             path: /
   tls:
     - hosts:
-      - nginx.dima.com
-      secretName: example-tls
+      - frontend.dmytroserbeniuk.uk
+      secretName: frontend.dmytroserbeniuk-uk
 ---
 apiVersion: v1
 kind: Service
@@ -76,42 +74,3 @@ spec:
       targetPort: 3000
   selector:
     app: my-nextjs-app
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: selfsigned-issuer
-spec:
-  selfSigned: {}
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: selfsigned-ca
-  namespace: cert-manager
-spec:
-  isCA: true
-  commonName: selfsigned-ca
-  secretName: root-secret
-  duration: 2160h # 90d
-  renewBefore: 360h # 15d
-  privateKey:
-    algorithm: ECDSA
-    size: 256
-  usages:
-    - server auth
-    - client auth
-  dnsNames:
-    - nginx.example.com
-  issuerRef:
-    name: selfsigned-issuer
-    kind: ClusterIssuer
-    group: cert-manager.io
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: ca-issuer
-spec:
-  ca:
-    secretName: root-secret

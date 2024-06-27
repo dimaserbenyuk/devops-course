@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: database-url-secret
-type: Opaque
-data:
-  DATABASE_URL: <db>

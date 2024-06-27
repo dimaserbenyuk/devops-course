@@ -15,17 +15,17 @@ spec:
     spec:
       containers:
         - name: my-nextjs-app
-          image: frontend44be2df5.azurecr.io/nextjs:v0.1
+          image: frontend44be2df5.azurecr.io/nextjs:0ac2929
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           resources:
             limits:
-              cpu: 300m
-              memory: 300Mi
+              cpu: 500m
+              memory: 500Mi
             requests:
-              cpu: 200m
-              memory: 200Mi
+              cpu: 400m
+              memory: 400Mi
           # volumeMounts:
           #   - name: tls-certs
           #     mountPath: /var/lib/tls

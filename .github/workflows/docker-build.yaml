@@ -31,7 +31,7 @@ jobs:
 
       - uses: azure/docker-login@v2
         with:
-          login-server: contoso.azurecr.io
+          login-server: frontend44be2df5.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
@@ -48,16 +48,30 @@ jobs:
             type=edge,branch=$repo.default_branch
             type=semver,pattern=v{{version}}
             type=sha,prefix=,suffix=,format=short
-      
+
+      - name: Create secret file from GitHub Secrets
+        run: |
+          echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}" > frontend/.env
+          echo "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}" >> frontend/.env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> frontend/.env
+
+      - name: cat
+        run: |
+          cat frontend/.env
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: frontend/
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # secrets: |
+          #   "secret_1=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}"
+          #   "secret_2=${{ secrets.CLERK_SECRET_KEY }}"
+          #   "secret_3=${{ secrets.DATABASE_URL }}"
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max

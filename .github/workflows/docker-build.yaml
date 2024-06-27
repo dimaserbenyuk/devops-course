@@ -59,5 +59,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          secrets: |
+            "secret_1=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}"
+            "secret_2=${{ secrets.CLERK_SECRET_KEY }}"
+            "secret_3=${{ secrets.DATABASE_URL }}"
           # cache-from: type=gha
           # cache-to: type=gha,mode=max

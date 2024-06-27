@@ -31,7 +31,7 @@ jobs:
 
       - uses: azure/docker-login@v2
         with:
-          login-server: contoso.azurecr.io
+          login-server: frontend44be2df5.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 

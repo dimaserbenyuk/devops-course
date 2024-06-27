@@ -3,8 +3,8 @@ name: Docker build-and-push
 on:
   push:
     tags: [ "*" ]
-  pull_request:
-    branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
     paths:
       - 'frontend/**'
     

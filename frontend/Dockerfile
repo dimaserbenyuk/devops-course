@@ -1,10 +1,11 @@
 # FROM node:18-buster  AS base
 
-# Install dependencies only when needed
 ARG NODE_VERSION=20.11.0
 
 FROM node:${NODE_VERSION}-alpine as base
+
 WORKDIR /app
+
 COPY package.json package-lock.json*  ./
 
 FROM base as deps
@@ -14,6 +15,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --frozen-lockfile
 
+    
 FROM deps as build
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=package-lock.json,target=package-lock.json \
@@ -39,6 +41,7 @@ COPY --from=build /app/.env/ ./.env
 COPY --from=build /app/prisma/* ./prisma/
 COPY --from=build /app/next.config.js ./
 COPY --from=build /app/tailwind.config.ts ./
+
 RUN npx prisma generate
 
 EXPOSE 3000

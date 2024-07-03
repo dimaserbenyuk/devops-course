@@ -15,26 +15,26 @@ spec:
     spec:
       containers:
         - name: my-nextjs-app
-          image: frontend44be2df5.azurecr.io/nextjs:0ac2929
+          image: frontend44be2df5.azurecr.io/nextjs:v0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           resources:
             limits:
-              cpu: 500m
-              memory: 500Mi
+              cpu: 300m
+              memory: 300Mi
             requests:
-              cpu: 400m
-              memory: 400Mi
-          # volumeMounts:
-          #   - name: tls-certs
-          #     mountPath: /var/lib/tls
+              cpu: 300m
+              memory: 300Mi
+          volumeMounts:
+            - name: tls-certs
+              mountPath: /var/lib/tls
       imagePullSecrets:
         - name: acr
-      # volumes:
-      #   - name: tls-certs
-      #     secret:
-      #       secretName: tls-secret
+      volumes:
+        - name: tls-certs
+          secret:
+            secretName: tls-secret
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -74,3 +74,19 @@ spec:
       targetPort: 3000
   selector:
     app: my-nextjs-app
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: production
+spec:
+  acme:
+    email: dserbenyukgood@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: production-cluster-issuer
+    solvers:
+      - selector: {}
+        http01:
+          ingress:
+            class: external-nginx

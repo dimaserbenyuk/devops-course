@@ -47,10 +47,10 @@ spec:
         name: mongodb-kubernetes-operator
         resources:
           limits:
-            cpu: 500m
-            memory: 400Mi
-          requests:
             cpu: 400m
+            memory: 300Mi
+          requests:
+            cpu: 300m
             memory: 200Mi
         # securityContext:
         #   readOnlyRootFilesystem: true

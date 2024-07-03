@@ -13,17 +13,17 @@ spec:
       modes:
       - SCRAM
   users:
-  - name: todo-user
-    db: todo
+  - name: admin-user
+    db: admin
     passwordSecretRef:
       name: admin-user-password
     roles:
     - name: clusterAdmin
-      db: todo
+      db: admin
     - name: userAdminAnyDatabase
-      db: todo
+      db: admin
     - name: readWrite
-      db: todo
+      db: admin
     scramCredentialsSecretName: my-scram
   security:
     tls:
@@ -68,8 +68,8 @@ spec:
                 cpu: 300m
                 memory: 300Mi
               requests:
-                cpu: 200m
-                memory: 200Mi      
+                cpu: 250m
+                memory: 250Mi      
       volumeClaimTemplates:
       - metadata:
           name: data-volume
@@ -87,41 +87,3 @@ spec:
           resources:
             requests:
               storage: 1Gi
-# mongosh "mongodb+srv://${ADMIN_USER}:${ADMIN_PASSWORD}@psmdb-db-rs0.percona.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
-
-# mongosh "mongodb+srv://admin-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/admin?ssl=true"
-
-# mongodb://admin-user:admin123@my-mongodb-0.my-mongodb-svc.mongodb.svc.cluster.local:27017,my-mongodb-1.my-mongodb-svc.mongodb.svc.cluster.local:27017/admin?ssl=true
-
-
-
-# mongosh \
-#   --tls \
-#   --tlsCAFile /var/lib/tls/ca/ca.crt \
-#   --tlsCertificateKeyFile /var/lib/tls/server/*.pem \
-#   "mongodb+srv://todo-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/todo?ssl=true"
-
-
-# show dbs
-
-# db.createUser(
-#   {
-#     user: 'dima',
-#     pwd: 'devops123',
-#     roles: [ { role: 'readWrite', db: 'todo' } ]
-#   }
-# );
-
-# db.auth('dima', 'devops123')
-
-# use todo
-
-# db.Task.find()
-
-# show collections
-
-# DATABASE_URL=mongodb+srv://admin-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/admin?ssl=true&tlsCAFile=/var/lib/tls/ca.crt&tlsCertificateKeyFile=/var/lib/tls/server.pem
-
-# DATABASE_URL=mongodb+srv://admin-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/admin?ssl=true&tlsCAFile=/var/lib/tls/ca.crt&tlsCertificateKeyFile=/var/lib/tls/server.pem
-
-# DATABASE_URL=mongodb+srv://todo-user:admin123@my-mongodb-svc.mongodb.svc.cluster.local/todo?ssl=true&tlsCAFile=/var/lib/tls/ca.crt&tlsCertificateKeyFile=/var/lib/tls/server.pem

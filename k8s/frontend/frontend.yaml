@@ -4,7 +4,7 @@ metadata:
   name: my-nextjs-app
   namespace: frontend
 spec:
-  replicas: 10
+  replicas: 1
   selector:
     matchLabels:
       app: my-nextjs-app

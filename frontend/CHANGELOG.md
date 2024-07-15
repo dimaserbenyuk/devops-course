@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.8](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.7...frontend-v0.0.8) (2024-07-15)
+
+
+### Features
+
+* add new functionality ([d656986](https://github.com/dimaserbenyuk/devops-course/commit/d65698630a9d3d7dfc12af678c7fb993df610086))
+
 ## [0.0.7](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.6...frontend-v0.0.7) (2024-07-15)
 
 

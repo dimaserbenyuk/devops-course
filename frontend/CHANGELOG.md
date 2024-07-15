@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.6...frontend-v0.0.7) (2024-07-15)
+
+
+### Bug Fixes
+
+* update front ([b4312cc](https://github.com/dimaserbenyuk/devops-course/commit/b4312cc43c42c22585829db73403b47e0921dc07))
+
 ## [0.0.6](https://github.com/dimaserbenyuk/devops-course/compare/frontend-v0.0.5...frontend-v0.0.6) (2024-06-27)
 
 

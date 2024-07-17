@@ -25,3 +25,7 @@ Testing 👨‍💻:
 INFRA:
   - any: ['**/rs-init.sh']
   - any: ['.github/**']
+
+Documentation:
+- changed-files:
+  - any-glob-to-any-file: nginx/**

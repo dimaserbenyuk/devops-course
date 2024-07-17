@@ -2,13 +2,14 @@ TMO ™️:
 - any: ['**/tmo-fiber/**/*']
 
 Dependencies 📚:
-- any: ['**/package.json', '**/package-lock.json']
+- changed-files:
+  - any-glob-to-any-file: ['**/package.json', '**/package-lock.json']
 
 Digicel+ ➕:
 - any: ['**/digicel-plus/**/*']
 
 Global 🌐:
-- sites/global/**/*
+- any: ['sites/global/**/*']
 
 Email/PDF template 📄:
 - any: ['**/templates/**/*']
@@ -21,3 +22,11 @@ Pages 🖥:
 
 Testing 👨‍💻:
 - any: ['**/*.spec.js', '**/*.spec.ts']
+
+INFRA:
+  - any: ['**/rs-init.sh']
+  - any: ['.github/**']
+
+Documentation:
+- changed-files:
+  - any-glob-to-any-file: nginx/**

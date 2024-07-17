@@ -1,13 +1,11 @@
 {
   "name": "mytasks",
   "version": "1.0.3",
-  
-
-  
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    
     "start": "next start",
     "lint": "next lint",
     "postinstall": "npx prisma generate"

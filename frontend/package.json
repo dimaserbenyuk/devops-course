@@ -1,6 +1,7 @@
 {
   "name": "mytasks",
   "version": "1.0.3",
+  
   "private": true,
   "scripts": {
     "dev": "next dev",

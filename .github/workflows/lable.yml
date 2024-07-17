@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          repository: "dimaserbenyuk/devops-course"
+        # uses: actions/checkout@v4
+        # with:
+        #   repository: "dimaserbenyuk/devops-course"
         
       - name: "github context dump"
         run: echo '${{ toJSON(github.event) }}' | jq
         shell: bash
-      - uses: actions/labeler@v5
+      - uses: actions/labeler@v4
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true

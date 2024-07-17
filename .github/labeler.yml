@@ -21,3 +21,6 @@ Pages 🖥:
 
 Testing 👨‍💻:
 - any: ['**/*.spec.js', '**/*.spec.ts']
+
+INFRA:
+  - rs-init.sh

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 
+
 mongosh -u root -p example  <<EOF
 var config = {
     "_id": "dbrs",

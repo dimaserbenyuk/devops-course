@@ -9,9 +9,17 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: "github context dump"
+        run: echo '${{ toJSON(github.event) }}' | jq
+        shell: bash
       - uses: actions/labeler@v5
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
           configuration-path: .github/labeler.yml
           dot: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.event.issue.user.login }}
+          REPO: ${{ github.event.repository.name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}

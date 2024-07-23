@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: my-nextjs-app
-          image: frontend44be2df5.azurecr.io/nextjs:aefcb1b
+          image: frontend44be2df5.azurecr.io/nextjs:e92155d
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

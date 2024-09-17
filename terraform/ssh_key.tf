@@ -1,8 +1,8 @@
 # Generate SSH key pair
-# resource "tls_private_key" "vm_ssh_key" {
-#   algorithm = "RSA"
-#   rsa_bits  = 4096
-# }
+resource "tls_private_key" "vm_ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
 
 # resource "azurerm_key_vault_secret" "ssh_private_key" {
 #   name         = "ssh-private-key"

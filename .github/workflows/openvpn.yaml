@@ -1,0 +1,64 @@
+name: OpenVPN Management
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform: create, revoke, status, or setup'
+        required: true
+        default: 'status'
+      user:
+        description: 'VPN user (Common Name)'
+        required: false
+      password:
+        description: 'VPN user password (required for create)'
+        required: false
+      email:
+        description: 'User email for sending profile (required for create)'
+        required: false
+
+jobs:
+  manage-openvpn:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Run OpenVPN management
+      run: |
+        ssh -o StrictHostKeyChecking=no user@your-ec2-instance <<EOF
+        cd /path/to/manage.sh
+
+        case "${{ github.event.inputs.action }}" in
+          "setup")
+            ./manage.sh --setup
+            ;;
+          "create")
+            if [[ -z "${{ github.event.inputs.user }}" || -z "${{ github.event.inputs.password }}" || -z "${{ github.event.inputs.email }}" ]]; then
+              echo "User, password, and email are required for creating a VPN user."
+              exit 1
+            fi
+            ./manage.sh --action create --user ${{ github.event.inputs.user }} --password ${{ github.event.inputs.password }} --email ${{ github.event.inputs.email }}
+            ;;
+          "revoke")
+            if [[ -z "${{ github.event.inputs.user }}" ]]; then
+              echo "User is required for revoking."
+              exit 1
+            fi
+            ./manage.sh --action revoke --user ${{ github.event.inputs.user }}
+            ;;
+          "status")
+            ./manage.sh --action status
+            ;;
+          *)
+            echo "Invalid action. Supported actions are: setup, create, revoke, status."
+            exit 1
+            ;;
+        esac
+        EOF

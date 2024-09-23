@@ -62,3 +62,14 @@ jobs:
             ;;
         esac
         EOF
+    - uses: act10ns/slack@v2
+      if: failure()
+      with:
+        webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        status: ${{ job.status }}
+        channel: '#lambda'
+        message: "Error: ECR repository '${{ env.repository_name }}' does not exist. Please create it."
+    - name: Documentation, Add AWS OCI ECR Repo
+      if: failure()
+      run: |
+        echo "For more information, visit: https://github.com/rodrigorfk/k8s-kyverno-mutating-policies/blob/main/src/examples/04-image-registry/policy.yaml"

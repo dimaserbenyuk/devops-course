@@ -1,0 +1,218 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: replace-image-registry-with-aws
+  annotations:
+    policies.kyverno.io/title: Replace Image Registry With AWS Pull-Through Cache
+    pod-policies.kyverno.io/autogen-controllers: none
+    policies.kyverno.io/category: Sample
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    kyverno.io/kyverno-version: 1.11.4
+    kyverno.io/kubernetes-version: "1.27"
+    policies.kyverno.io/description: >-
+      This policy rewrites image registry paths to use AWS Pull-Through Cache,
+      ensuring that images are cached internally in the AWS Elastic Container Registry (ECR)
+      for performance. The policy supports multiple registries, 
+      redirecting image pulls from Docker Hub, Quay, k8s.io, and GitHub's Container Registry to AWS ECR.
+spec:
+  admission: true
+  background: false
+  failurePolicy: Ignore
+  rules:
+    - name: replace-image-registry-with-aws
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              operations:
+                - CREATE
+                - UPDATE
+      mutate:
+        foreach:
+          - list: request.object.spec.initContainers[]
+            context:
+              - name: imageData
+                imageRegistry:
+                  reference: "{{ element.image }}"
+            preconditions:
+              any:
+                - key: "{{ imageData.registry }}"
+                  operator: In
+                  value:
+                    - index.docker.io
+                    - quay.io
+                    - registry.k8s.io
+                    - ghcr.io
+                    - public.ecr.aws
+            patchStrategicMerge:
+              spec:
+                initContainers:
+                  - name: "{{ element.name }}"
+                    image: am/{{ imageData.registry }}/{{ imageData.repository }}:{{ imageData.identifier }}
+          - list: request.object.spec.containers[]
+            context:
+              - name: imageData
+                imageRegistry:
+                  reference: "{{ element.image }}"
+            preconditions:
+              any:
+                - key: "{{ imageData.registry }}"
+                  operator: In
+                  value:
+                    - index.docker.io
+                    - quay.io
+                    - registry.k8s.io
+                    - ghcr.io
+                    - public.ecr.aws
+            patchStrategicMerge:
+              spec:
+                containers:
+                  - name: "{{ element.name }}"
+                    image: am/{{ imageData.registry }}/{{ imageData.repository }}:{{ imageData.identifier }}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.13.0
+        name: registry
+        ports:
+          - containerPort: 80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      nodeSelector:
+        group-name: worker-group-infra
+        kubernetes.io/arch: amd64
+
+      # -- List of node taints to tolerate
+      tolerations:
+        - key: node-role.kubernetes.io/infralayer
+          operator: Exists
+          effect: NoSchedule
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300
+      # imagePullSecrets:
+      # - name: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghcr
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghcr
+  template:
+    metadata:
+      labels:
+        app: ghcr
+    spec:
+      containers:
+      - image: ghcr.io/kyverno/policy-reporter-ui:1.9.0
+        name: ghcr
+        ports:
+          - containerPort: 80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      nodeSelector:
+        group-name: worker-group-infra
+        kubernetes.io/arch: amd64
+
+      # -- List of node taints to tolerate
+      tolerations:
+        - key: node-role.kubernetes.io/infralayer
+          operator: Exists
+          effect: NoSchedule
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300
+      # imagePullSecrets:
+      # - name: regcred
+
+
+      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - image: docker.io/library/redis:5.0
+        name: redis
+        ports:
+          - containerPort: 80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      nodeSelector:
+        group-name: worker-group-infra
+        kubernetes.io/arch: amd64
+
+      # -- List of node taints to tolerate
+      tolerations:
+        - key: node-role.kubernetes.io/infralayer
+          operator: Exists
+          effect: NoSchedule
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300
+      # imagePullSecrets:
+      # - name: regcred
